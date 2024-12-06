@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор ников и паролей Roblox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            max-width: 800px;
+        }
+        .column {
+            width: 100%;
+            background-color: #ecf0f1;
+            margin: 0 10px;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: left;
+        }
+        .column h2 {
+            text-align: center;
+        }
+        .column div {
+            padding: 5px;
+            border-bottom: 1px solid #bdc3c7;
+            cursor: pointer;
+        }
+        .column div:hover {
+            background-color: #dcdde1;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #favorite {
+            margin-top: 20px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fef9c3;
+            color: #555;
+            max-width: 80%;
+        }
+    </style>
+    <script>
+        // Функция для генерации случайной строки
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
+        // Генерация 100 пар ников и паролей
+        function generateCredentials() {
+            const generatedData = [];
+            for (let i = 0; i < 100; i++) {
+                const nickname = generateRandomString(8);
+                const password = generateRandomString(10);
+                generatedData.push({ nickname, password });
+            }
+
+            // Отображение в левом табло
+            const column = document.getElementById("generatedData");
+            column.innerHTML = "";
+            generatedData.forEach(item => {
+                const div = document.createElement("div");
+                div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                div.onclick = () => saveFavorite(item);
+                column.appendChild(div);
+            });
+
+            // Сохранение данных в sessionStorage
+            sessionStorage.setItem("generatedData", JSON.stringify(generatedData));
+        }
+
+        // Сохранение понравившейся пары
+        function saveFavorite(item) {
+            localStorage.setItem("favorite", JSON.stringify(item));
+            showFavorite();
+        }
+
+        // Отображение понравившейся пары
+        function showFavorite() {
+            const favorite = JSON.parse(localStorage.getItem("favorite"));
+            const favoriteDiv = document.getElementById("favorite");
+            if (favorite) {
+                favoriteDiv.textContent = `Ваш любимый ник: ${favorite.nickname}, Пароль: ${favorite.password}`;
+            } else {
+                favoriteDiv.textContent = "Вы пока не выбрали понравившийся ник и пароль.";
+            }
+        }
+
+        // Инициализация при загрузке страницы
+        window.onload = () => {
+            const generatedData = JSON.parse(sessionStorage.getItem("generatedData"));
+            const column = document.getElementById("generatedData");
+            if (generatedData) {
+                generatedData.forEach(item => {
+                    const div = document.createElement("div");
+                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    div.onclick = () => saveFavorite(item);
+                    column.appendChild(div);
+                });
+            }
+            showFavorite();
+        };
+    </script>
+</head>
+<body>
+    <h1>Генератор ников и паролей Roblox</h1>
+    <div class="container">
+        <div class="column">
+            <h2>Сгенерированные ники и пароли</h2>
+            <div id="generatedData"></div>
+        </div>
+    </div>
+    <button onclick="generateCredentials()">Генерировать 100 ников и паролей</button>
+    <div id="favorite"></div>
+</body>
+</html>
