@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f3f3f3;
+            background-color: #f9f9f9;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -20,49 +20,65 @@
         }
         .container {
             display: flex;
-            justify-content: center;
-            width: 100%;
-            max-width: 800px;
+            justify-content: space-between;
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 20px;
         }
         .column {
-            width: 100%;
+            width: 30%;
             background-color: #ecf0f1;
-            margin: 0 10px;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: left;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            max-height: 400px;
         }
         .column h2 {
             text-align: center;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #34495e;
         }
         .column div {
-            padding: 5px;
+            padding: 8px;
             border-bottom: 1px solid #bdc3c7;
             cursor: pointer;
+            font-size: 14px;
         }
         .column div:hover {
             background-color: #dcdde1;
+            border-radius: 4px;
+        }
+        .center-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 16px;
-            margin: 20px;
-            background-color: #3498db;
+            margin: 20px 0;
+            background-color: #2ecc71;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
         }
         button:hover {
-            background-color: #2980b9;
+            background-color: #27ae60;
         }
         #favorite {
             margin-top: 20px;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 8px;
             background-color: #fef9c3;
             color: #555;
-            max-width: 80%;
+            max-width: 90%;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
     </style>
     <script>
@@ -86,13 +102,13 @@
             }
 
             // Отображение в левом табло
-            const column = document.getElementById("generatedData");
-            column.innerHTML = "";
+            const generatedColumn = document.getElementById("generatedData");
+            generatedColumn.innerHTML = "";
             generatedData.forEach(item => {
                 const div = document.createElement("div");
                 div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
                 div.onclick = () => saveFavorite(item);
-                column.appendChild(div);
+                generatedColumn.appendChild(div);
             });
 
             // Сохранение данных в sessionStorage
@@ -102,11 +118,11 @@
         // Сохранение понравившейся пары
         function saveFavorite(item) {
             localStorage.setItem("favorite", JSON.stringify(item));
-            showFavorite();
+            updateFavoriteDisplay();
         }
 
-        // Отображение понравившейся пары
-        function showFavorite() {
+        // Обновление отображения избранного
+        function updateFavoriteDisplay() {
             const favorite = JSON.parse(localStorage.getItem("favorite"));
             const favoriteDiv = document.getElementById("favorite");
             if (favorite) {
@@ -119,16 +135,16 @@
         // Инициализация при загрузке страницы
         window.onload = () => {
             const generatedData = JSON.parse(sessionStorage.getItem("generatedData"));
-            const column = document.getElementById("generatedData");
+            const generatedColumn = document.getElementById("generatedData");
             if (generatedData) {
                 generatedData.forEach(item => {
                     const div = document.createElement("div");
                     div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
                     div.onclick = () => saveFavorite(item);
-                    column.appendChild(div);
+                    generatedColumn.appendChild(div);
                 });
             }
-            showFavorite();
+            updateFavoriteDisplay();
         };
     </script>
 </head>
@@ -136,11 +152,16 @@
     <h1>Генератор ников и паролей Roblox</h1>
     <div class="container">
         <div class="column">
-            <h2>Сгенерированные ники и пароли</h2>
+            <h2>Сгенерированные</h2>
             <div id="generatedData"></div>
         </div>
+        <div class="center-button">
+            <button onclick="generateCredentials()">Сгенерировать пароли и ники</button>
+        </div>
+        <div class="column">
+            <h2>Ваши избранные</h2>
+            <div id="favorite">Вы пока не выбрали понравившийся ник и пароль.</div>
+        </div>
     </div>
-    <button onclick="generateCredentials()">Генерировать 100 ников и паролей</button>
-    <div id="favorite"></div>
 </body>
 </html>
