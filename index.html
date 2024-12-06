@@ -45,24 +45,10 @@
             border-bottom: 1px solid #bdc3c7;
             cursor: pointer;
             font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
         .column div:hover {
             background-color: #dcdde1;
             border-radius: 4px;
-        }
-        .remove-btn {
-            background-color: #e74c3c;
-            color: white;
-            padding: 4px 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .remove-btn:hover {
-            background-color: #c0392b;
         }
         .center-button {
             display: flex;
@@ -109,7 +95,7 @@
             generatedColumn.innerHTML = "";
             generatedData.forEach(item => {
                 const div = document.createElement("div");
-                div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                div.textContent = Ник: ${item.nickname}, Пароль: ${item.password};
                 div.onclick = () => addToFavorites(item);
                 generatedColumn.appendChild(div);
             });
@@ -145,12 +131,8 @@
             } else {
                 favorites.forEach((item, index) => {
                     const div = document.createElement("div");
-                    div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}`;
-                    const removeBtn = document.createElement("button");
-                    removeBtn.classList.add("remove-btn");
-                    removeBtn.textContent = "Удалить";
-                    removeBtn.onclick = () => removeFromFavorites(index);
-                    div.appendChild(removeBtn);
+                    div.textContent = Ник: ${item.nickname}, Пароль: ${item.password};
+                    div.onclick = () => removeFromFavorites(index);
                     favoriteColumn.appendChild(div);
                 });
             }
@@ -163,7 +145,7 @@
             if (generatedData) {
                 generatedData.forEach(item => {
                     const div = document.createElement("div");
-                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    div.textContent = Ник: ${item.nickname}, Пароль: ${item.password};
                     div.onclick = () => addToFavorites(item);
                     generatedColumn.appendChild(div);
                 });
