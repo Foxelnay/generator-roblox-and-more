@@ -41,35 +41,21 @@
             color: #34495e;
         }
         .column div {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             padding: 8px;
             border-bottom: 1px solid #bdc3c7;
+            cursor: pointer;
             font-size: 14px;
         }
         .column div:hover {
             background-color: #dcdde1;
             border-radius: 4px;
         }
-        .column button {
-            background-color: #f39c12; /* Темнее оттенок жёлтого */
-            color: #333;
-            border: none;
-            border-radius: 4px;
-            padding: 5px 10px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .column button:hover {
-            background-color: #e67e22; /* Еще более темный оттенок */
-        }
         .center-button {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-        button.main {
+        button {
             padding: 12px 20px;
             font-size: 16px;
             margin: 20px 0;
@@ -80,20 +66,8 @@
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
         }
-        button.main:hover {
+        button:hover {
             background-color: #27ae60;
-        }
-        .button-text {
-            background-color: #f39c12; /* Темнее оттенок жёлтого */
-            padding: 5px 10px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #333;
-            text-align: center;
-        }
-        .button-text:hover {
-            background-color: #e67e22; /* Еще более темный оттенок */
         }
     </style>
     <script>
@@ -121,7 +95,8 @@
             generatedColumn.innerHTML = "";
             generatedData.forEach(item => {
                 const div = document.createElement("div");
-                div.innerHTML = `<span class="button-text" onclick='addToFavorites(${JSON.stringify(item)})'>Ник: ${item.nickname}, Пароль: ${item.password}</span>`;
+                div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                div.onclick = () => addToFavorites(item);
                 generatedColumn.appendChild(div);
             });
 
@@ -156,8 +131,8 @@
             } else {
                 favorites.forEach((item, index) => {
                     const div = document.createElement("div");
-                    div.innerHTML = `<span class="button-text">${item.nickname}, ${item.password}</span> 
-                    <button onclick='removeFromFavorites(${index})'>Удалить</button>`;
+                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    div.onclick = () => removeFromFavorites(index);
                     favoriteColumn.appendChild(div);
                 });
             }
@@ -170,7 +145,8 @@
             if (generatedData) {
                 generatedData.forEach(item => {
                     const div = document.createElement("div");
-                    div.innerHTML = `<span class="button-text" onclick='addToFavorites(${JSON.stringify(item)})'>Ник: ${item.nickname}, Пароль: ${item.password}</span>`;
+                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    div.onclick = () => addToFavorites(item);
                     generatedColumn.appendChild(div);
                 });
             }
@@ -186,7 +162,7 @@
             <div id="generatedData"></div>
         </div>
         <div class="center-button">
-            <button class="main" onclick="generateCredentials()">Сгенерировать пароли и ники</button>
+            <button onclick="generateCredentials()">Сгенерировать пароли и ники</button>
         </div>
         <div class="column">
             <h2>Ваши избранные</h2>
