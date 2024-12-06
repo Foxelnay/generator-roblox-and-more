@@ -69,17 +69,6 @@
         button:hover {
             background-color: #27ae60;
         }
-        #favorite {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 8px;
-            background-color: #fef9c3;
-            color: #555;
-            max-width: 90%;
-            font-size: 16px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
     </style>
     <script>
         // Функция для генерации случайной строки
@@ -107,7 +96,7 @@
             generatedData.forEach(item => {
                 const div = document.createElement("div");
                 div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
-                div.onclick = () => saveFavorite(item);
+                div.onclick = () => addToFavorites(item);
                 generatedColumn.appendChild(div);
             });
 
@@ -115,20 +104,37 @@
             sessionStorage.setItem("generatedData", JSON.stringify(generatedData));
         }
 
-        // Сохранение понравившейся пары
-        function saveFavorite(item) {
-            localStorage.setItem("favorite", JSON.stringify(item));
+        // Добавление в избранное
+        function addToFavorites(item) {
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+            favorites.push(item);
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            updateFavoriteDisplay();
+        }
+
+        // Удаление из избранного
+        function removeFromFavorites(index) {
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+            favorites.splice(index, 1); // Удаляем элемент по индексу
+            localStorage.setItem("favorites", JSON.stringify(favorites));
             updateFavoriteDisplay();
         }
 
         // Обновление отображения избранного
         function updateFavoriteDisplay() {
-            const favorite = JSON.parse(localStorage.getItem("favorite"));
-            const favoriteDiv = document.getElementById("favorite");
-            if (favorite) {
-                favoriteDiv.textContent = `Ваш любимый ник: ${favorite.nickname}, Пароль: ${favorite.password}`;
+            const favoriteColumn = document.getElementById("favoriteData");
+            const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+            favoriteColumn.innerHTML = "";
+
+            if (favorites.length === 0) {
+                favoriteColumn.innerHTML = "<div>Ваш список избранного пуст.</div>";
             } else {
-                favoriteDiv.textContent = "Вы пока не выбрали понравившийся ник и пароль.";
+                favorites.forEach((item, index) => {
+                    const div = document.createElement("div");
+                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    div.onclick = () => removeFromFavorites(index);
+                    favoriteColumn.appendChild(div);
+                });
             }
         }
 
@@ -140,7 +146,7 @@
                 generatedData.forEach(item => {
                     const div = document.createElement("div");
                     div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
-                    div.onclick = () => saveFavorite(item);
+                    div.onclick = () => addToFavorites(item);
                     generatedColumn.appendChild(div);
                 });
             }
@@ -160,7 +166,7 @@
         </div>
         <div class="column">
             <h2>Ваши избранные</h2>
-            <div id="favorite">Вы пока не выбрали понравившийся ник и пароль.</div>
+            <div id="favoriteData"></div>
         </div>
     </div>
 </body>
