@@ -40,17 +40,26 @@
             font-size: 18px;
             color: #34495e;
         }
+        .column div {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            border-bottom: 1px solid #bdc3c7;
+            font-size: 14px;
+        }
+        .column div:hover {
+            background-color: #dcdde1;
+            border-radius: 4px;
+        }
         .column button {
-            display: block;
             background-color: #f1c40f;
             color: #333;
             border: none;
             border-radius: 4px;
-            padding: 10px 15px;
-            margin: 5px 0;
+            padding: 5px 10px;
             cursor: pointer;
-            font-size: 14px;
-            text-align: left;
+            font-size: 12px;
         }
         .column button:hover {
             background-color: #f39c12;
@@ -73,6 +82,18 @@
         }
         button.main:hover {
             background-color: #27ae60;
+        }
+        .button-text {
+            background-color: #f1c40f;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #333;
+            text-align: center;
+        }
+        .button-text:hover {
+            background-color: #f39c12;
         }
     </style>
     <script>
@@ -98,11 +119,10 @@
             // Отображение в левом табло
             const generatedColumn = document.getElementById("generatedData");
             generatedColumn.innerHTML = "";
-            generatedData.forEach((item, index) => {
-                const button = document.createElement("button");
-                button.innerText = `Ник: ${item.nickname}, Пароль: ${item.password}`;
-                button.onclick = () => addToFavorites(item);
-                generatedColumn.appendChild(button);
+            generatedData.forEach(item => {
+                const div = document.createElement("div");
+                div.innerHTML = `<span class="button-text" onclick='addToFavorites(${JSON.stringify(item)})'>Ник: ${item.nickname}, Пароль: ${item.password}</span>`;
+                generatedColumn.appendChild(div);
             });
 
             // Сохранение данных в sessionStorage
@@ -135,10 +155,10 @@
                 favoriteColumn.innerHTML = "<div>Ваш список избранного пуст.</div>";
             } else {
                 favorites.forEach((item, index) => {
-                    const button = document.createElement("button");
-                    button.innerText = `Ник: ${item.nickname}, Пароль: ${item.password}`;
-                    button.onclick = () => removeFromFavorites(index);
-                    favoriteColumn.appendChild(button);
+                    const div = document.createElement("div");
+                    div.innerHTML = `<span class="button-text">${item.nickname}, ${item.password}</span> 
+                    <button onclick='removeFromFavorites(${index})'>Удалить</button>`;
+                    favoriteColumn.appendChild(div);
                 });
             }
         }
@@ -149,10 +169,9 @@
             const generatedColumn = document.getElementById("generatedData");
             if (generatedData) {
                 generatedData.forEach(item => {
-                    const button = document.createElement("button");
-                    button.innerText = `Ник: ${item.nickname}, Пароль: ${item.password}`;
-                    button.onclick = () => addToFavorites(item);
-                    generatedColumn.appendChild(button);
+                    const div = document.createElement("div");
+                    div.innerHTML = `<span class="button-text" onclick='addToFavorites(${JSON.stringify(item)})'>Ник: ${item.nickname}, Пароль: ${item.password}</span>`;
+                    generatedColumn.appendChild(div);
                 });
             }
             updateFavoriteDisplay();
