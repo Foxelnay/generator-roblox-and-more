@@ -95,7 +95,7 @@
             generatedColumn.innerHTML = "";
             generatedData.forEach(item => {
                 const div = document.createElement("div");
-                div.textContent = Ник: ${item.nickname}, Пароль: ${item.password};
+                div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
                 div.onclick = () => addToFavorites(item);
                 generatedColumn.appendChild(div);
             });
@@ -131,7 +131,7 @@
             } else {
                 favorites.forEach((item, index) => {
                     const div = document.createElement("div");
-                    div.textContent = Ник: ${item.nickname}, Пароль: ${item.password};
+                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
                     div.onclick = () => removeFromFavorites(index);
                     favoriteColumn.appendChild(div);
                 });
@@ -145,7 +145,7 @@
             if (generatedData) {
                 generatedData.forEach(item => {
                     const div = document.createElement("div");
-                    div.textContent = Ник: ${item.nickname}, Пароль: ${item.password};
+                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
                     div.onclick = () => addToFavorites(item);
                     generatedColumn.appendChild(div);
                 });
