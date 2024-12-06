@@ -115,7 +115,8 @@
             generatedColumn.innerHTML = "";
             generatedData.forEach(item => {
                 const div = document.createElement("div");
-                div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}
+                <button class="favorite-btn" onclick="addToFavorites('${item.nickname}', '${item.password}')">Добавить в избранное</button>`;
                 generatedColumn.appendChild(div);
             });
 
@@ -124,17 +125,9 @@
         }
 
         // Добавление в избранное
-        function addToFavorites(item) {
+        function addToFavorites(nickname, password) {
             let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-            favorites.push(item);
-            localStorage.setItem("favorites", JSON.stringify(favorites));
-            updateFavoriteDisplay();
-        }
-
-        // Удаление из избранного
-        function removeFromFavorites(index) {
-            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-            favorites.splice(index, 1); // Удаляем элемент по индексу
+            favorites.push({ nickname, password });
             localStorage.setItem("favorites", JSON.stringify(favorites));
             updateFavoriteDisplay();
         }
@@ -148,10 +141,9 @@
             if (favorites.length === 0) {
                 favoriteColumn.innerHTML = "<div>Ваш список избранного пуст.</div>";
             } else {
-                favorites.forEach((item, index) => {
+                favorites.forEach(item => {
                     const div = document.createElement("div");
-                    div.innerHTML = `${item.nickname}, ${item.password} 
-                    <button onclick='removeFromFavorites(${index})'>Удалить</button>`;
+                    div.innerHTML = `${item.nickname}, ${item.password}`;
                     favoriteColumn.appendChild(div);
                 });
             }
@@ -175,7 +167,8 @@
             if (generatedData) {
                 generatedData.forEach(item => {
                     const div = document.createElement("div");
-                    div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}
+                    <button class="favorite-btn" onclick="addToFavorites('${item.nickname}', '${item.password}')">Добавить в избранное</button>`;
                     generatedColumn.appendChild(div);
                 });
             }
