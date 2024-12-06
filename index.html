@@ -13,17 +13,21 @@
             flex-direction: column;
             align-items: center;
             padding: 20px;
+            margin: 0;
         }
         h1 {
             color: #2c3e50;
             margin-bottom: 20px;
+            font-size: 24px;
         }
         .container {
             display: flex;
             justify-content: space-between;
-            width: 90%;
+            width: 100%;
             max-width: 1200px;
             margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
         }
         .column {
             width: 30%;
@@ -33,6 +37,7 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             overflow-y: auto;
             max-height: 400px;
+            box-sizing: border-box;
         }
         .column h2 {
             text-align: center;
@@ -41,23 +46,36 @@
             color: #34495e;
         }
         .column div {
+            padding: 8px;
+            border-bottom: 1px solid #bdc3c7;
+            cursor: pointer;
+            font-size: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px;
-            border-bottom: 1px solid #bdc3c7;
-            font-size: 14px;
         }
         .column div:hover {
             background-color: #dcdde1;
             border-radius: 4px;
         }
+        .remove-btn {
+            background-color: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .remove-btn:hover {
+            background-color: #c0392b;
+        }
         .center-button {
             display: flex;
             flex-direction: column;
             align-items: center;
+            width: 100%;
         }
-        button.main {
+        button {
             padding: 12px 20px;
             font-size: 16px;
             margin: 20px 0;
@@ -68,27 +86,33 @@
             cursor: pointer;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16);
         }
-        button.main:hover {
+        button:hover {
             background-color: #27ae60;
         }
 
-        /* Мобильный режим */
-        .mobile .container {
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-        .mobile .column {
-            width: 90%;
-            margin-bottom: 20px;
-        }
-        .mobile .center-button {
-            margin-top: 20px;
-        }
-        .mobile button.main {
-            width: 100%;
-        }
+        /* Мобильная версия */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
 
+            .column {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            button {
+                width: 100%;
+                font-size: 18px;
+                padding: 14px;
+            }
+        }
     </style>
     <script>
         // Функция для генерации случайной строки
@@ -115,8 +139,8 @@
             generatedColumn.innerHTML = "";
             generatedData.forEach(item => {
                 const div = document.createElement("div");
-                div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}
-                <button class="favorite-btn" onclick="addToFavorites('${item.nickname}', '${item.password}')">Добавить в избранное</button>`;
+                div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                div.onclick = () => addToFavorites(item);
                 generatedColumn.appendChild(div);
             });
 
@@ -125,9 +149,17 @@
         }
 
         // Добавление в избранное
-        function addToFavorites(nickname, password) {
+        function addToFavorites(item) {
             let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
-            favorites.push({ nickname, password });
+            favorites.push(item);
+            localStorage.setItem("favorites", JSON.stringify(favorites));
+            updateFavoriteDisplay();
+        }
+
+        // Удаление из избранного
+        function removeFromFavorites(index) {
+            let favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+            favorites.splice(index, 1); // Удаляем элемент по индексу
             localStorage.setItem("favorites", JSON.stringify(favorites));
             updateFavoriteDisplay();
         }
@@ -141,42 +173,33 @@
             if (favorites.length === 0) {
                 favoriteColumn.innerHTML = "<div>Ваш список избранного пуст.</div>";
             } else {
-                favorites.forEach(item => {
+                favorites.forEach((item, index) => {
                     const div = document.createElement("div");
-                    div.innerHTML = `${item.nickname}, ${item.password}`;
+                    div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    const removeBtn = document.createElement("button");
+                    removeBtn.classList.add("remove-btn");
+                    removeBtn.textContent = "Удалить";
+                    removeBtn.onclick = () => removeFromFavorites(index);
+                    div.appendChild(removeBtn);
                     favoriteColumn.appendChild(div);
                 });
             }
         }
 
-        // Проверка устройства и активация мобильного режима
-        function checkDevice() {
-            const isMobile = window.innerWidth <= 768;
-            if (isMobile) {
-                document.body.classList.add('mobile');
-            } else {
-                document.body.classList.remove('mobile');
-            }
-        }
-
         // Инициализация при загрузке страницы
         window.onload = () => {
-            checkDevice(); // Проверяем устройство
             const generatedData = JSON.parse(sessionStorage.getItem("generatedData"));
             const generatedColumn = document.getElementById("generatedData");
             if (generatedData) {
                 generatedData.forEach(item => {
                     const div = document.createElement("div");
-                    div.innerHTML = `Ник: ${item.nickname}, Пароль: ${item.password}
-                    <button class="favorite-btn" onclick="addToFavorites('${item.nickname}', '${item.password}')">Добавить в избранное</button>`;
+                    div.textContent = `Ник: ${item.nickname}, Пароль: ${item.password}`;
+                    div.onclick = () => addToFavorites(item);
                     generatedColumn.appendChild(div);
                 });
             }
             updateFavoriteDisplay();
         };
-
-        // Слушаем изменение размера окна для динамической проверки
-        window.onresize = checkDevice;
     </script>
 </head>
 <body>
@@ -187,7 +210,7 @@
             <div id="generatedData"></div>
         </div>
         <div class="center-button">
-            <button class="main" onclick="generateCredentials()">Сгенерировать пароли и ники</button>
+            <button onclick="generateCredentials()">Сгенерировать пароли и ники</button>
         </div>
         <div class="column">
             <h2>Ваши избранные</h2>
